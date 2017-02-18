@@ -87,30 +87,36 @@ public class FlyerService extends Service {
             }
             @Override
             protected String doInBackground(Void... params) {
-                Document doc = null;
+                Document doc;
                 try {
                     doc = Jsoup.connect("https://twitter.com/goldevestuario").get();
                     Elements tweets = doc.select("div#doc.route-profile div#page-outer div#page-container.AppContent div.AppContainer div.AppContent-main.content-main.u-cf div.Grid.Grid--withGutter div.Grid-cell.u-size2of3.u-lg-size3of4 div.Grid.Grid--withGutter div.Grid-cell.u-lg-size2of3 div#timeline.ProfileTimeline div.stream-container div.stream ol#stream-items-id.stream-items.js-navigable-stream");
                     //    Element imagen = doc.select("div#doc.route-profile div#page-outer div#page-container.AppContent div.AppContainer div.AppContent-main.content-main.u-cf div.Grid.Grid--withGutter div.Grid-cell.u-size2of3.u-lg-size3of4 div.Grid.Grid--withGutter div.Grid-cell.u-lg-size2of3 div#timeline.ProfileTimeline div.stream-container div.stream ol#stream-items-id.stream-items.js-navigable-stream li#stream-item-tweet-829472767208804353.js-stream-item.stream-item.stream-item div.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable.original-tweet.js-original-tweet.has-cards.has-content div.content div.AdaptiveMediaOuterContainer div.AdaptiveMedia.is-square div.AdaptiveMedia-container.js-adaptive-media-container div.AdaptiveMedia-singlePhoto div.AdaptiveMedia-photoContainer.js-adaptive-photo img").first();
                     String tweet = tweets.get(0).getElementsByClass("js-tweet-text-container").get(0).text();
+                  //  tweet.contains("[AIRE]")
+                    if(tweet.contains("[AIRE]")){
+
                     Element imagen = tweets.get(0).select("img").get(1);
-                    String url = imagen.absUrl("src");
+
               //      Bitmap img = BitmapFactory.decodeFile(url);
                  //   System.out.println(url);
                     //      System.out.println(tweet);
                     //     System.out.println("imagen: "+url);
-                    return url;
+                    return  imagen.absUrl("src");
+                    }
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                     return null;
                 }
+
+                return null;
             }
         }
         GetMP3 gmp3 = new GetMP3();
         gmp3.execute();
     }
     protected Notification createNotification(int start, RemoteViews expanded) {
-            boolean aux;            aux = start != 0;
+          //  boolean aux;            aux = start != 0;
 
 
         RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification2);
