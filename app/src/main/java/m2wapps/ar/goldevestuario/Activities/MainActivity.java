@@ -24,8 +24,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.Objects;
 
+import m2wapps.ar.goldevestuario.Services.AnalyticsApplication;
 import m2wapps.ar.goldevestuario.Services.FlyerService;
 import m2wapps.ar.goldevestuario.Fragments.HomeFragment;
 import m2wapps.ar.goldevestuario.Fragments.RadioFragment;
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private HomeFragment homeFragment;
     private Intent flyer;
     private boolean isInternet;
+    private AnalyticsApplication application = (AnalyticsApplication) getApplication();
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +77,13 @@ public class MainActivity extends AppCompatActivity
             }
         }
         if (isInternet) {
+
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            mTracker = application.getDefaultTracker();
+            mTracker.setScreenName("Inicio");
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
             StrictMode.setThreadPolicy(policy);
+
          //   flyer = new Intent(this, FlyerService.class);
           //  startService(flyer);
             setFragment(1);
@@ -196,6 +207,10 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction;
         switch (position) {
             case 0:
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Radio")
+                        .build());
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 if (radioFragment == null) {
@@ -205,6 +220,10 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.commit();
                 break;
             case 1:
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Noticias")
+                        .build());
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 if (homeFragment == null) {
