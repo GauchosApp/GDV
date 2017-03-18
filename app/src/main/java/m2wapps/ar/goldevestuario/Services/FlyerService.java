@@ -1,19 +1,25 @@
 package m2wapps.ar.goldevestuario.Services;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,6 +28,8 @@ import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import m2wapps.ar.goldevestuario.Activities.MainActivity;
 import m2wapps.ar.goldevestuario.R;
@@ -42,7 +50,7 @@ public class FlyerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        task();
+        hilo();
         return super.onStartCommand(intent, flags, startId);
     }
     private void task(){
@@ -55,53 +63,32 @@ public class FlyerService extends Service {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                final RemoteViews expanded = new RemoteViews(getPackageName(), R.layout.notification_expanded);
                 System.out.println(s);
-                Picasso.with(ctx)
-                        .load(s)
-                        .resize(1000,500)
-                        .into(new Target() {
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                URL url = null;
+                try {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    String aux = s.replace("https","http");
+                    url = new URL(aux);
+                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    createNotification(bmp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
 
-                                expanded.setImageViewBitmap(R.id.cover,Bitmap.createScaledBitmap(bitmap,682,383,false));
-                                //startForeground(2,createNotification(1, expanded));
-                                Notification obj = createNotification(1,expanded);
-                                synchronized(obj){
-                                    obj.notify();
-                                }
-                               // createNotification(1,expanded).notify();
-                            }
-
-                            @Override
-                            public void onBitmapFailed(Drawable errorDrawable) {
-                                System.out.println("fallo");
-                            }
-
-                            @Override
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                            }
-                        });
             }
             @Override
             protected String doInBackground(Void... params) {
                 Document doc;
                 try {
-                    doc = Jsoup.connect("https://twitter.com/goldevestuario").get();
+                    doc = Jsoup.connect("https://twitter.com/matijuguera").get();
                     Elements tweets = doc.select("div#doc.route-profile div#page-outer div#page-container.AppContent div.AppContainer div.AppContent-main.content-main.u-cf div.Grid.Grid--withGutter div.Grid-cell.u-size2of3.u-lg-size3of4 div.Grid.Grid--withGutter div.Grid-cell.u-lg-size2of3 div#timeline.ProfileTimeline div.stream-container div.stream ol#stream-items-id.stream-items.js-navigable-stream");
                     //    Element imagen = doc.select("div#doc.route-profile div#page-outer div#page-container.AppContent div.AppContainer div.AppContent-main.content-main.u-cf div.Grid.Grid--withGutter div.Grid-cell.u-size2of3.u-lg-size3of4 div.Grid.Grid--withGutter div.Grid-cell.u-lg-size2of3 div#timeline.ProfileTimeline div.stream-container div.stream ol#stream-items-id.stream-items.js-navigable-stream li#stream-item-tweet-829472767208804353.js-stream-item.stream-item.stream-item div.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable.original-tweet.js-original-tweet.has-cards.has-content div.content div.AdaptiveMediaOuterContainer div.AdaptiveMedia.is-square div.AdaptiveMedia-container.js-adaptive-media-container div.AdaptiveMedia-singlePhoto div.AdaptiveMedia-photoContainer.js-adaptive-photo img").first();
                     String tweet = tweets.get(0).getElementsByClass("js-tweet-text-container").get(0).text();
-                  //  tweet.contains("[AIRE]")
+
                     if(tweet.contains("[AIRE]")){
-
                     Element imagen = tweets.get(0).select("img").get(1);
-
-              //      Bitmap img = BitmapFactory.decodeFile(url);
-                 //   System.out.println(url);
-                    //      System.out.println(tweet);
-                    //     System.out.println("imagen: "+url);
                     return  imagen.absUrl("src");
                     }
                 } catch (IOException e) {
@@ -115,40 +102,54 @@ public class FlyerService extends Service {
         GetMP3 gmp3 = new GetMP3();
         gmp3.execute();
     }
-    protected Notification createNotification(int start, RemoteViews expanded) {
-          //  boolean aux;            aux = start != 0;
+    private void createNotification(Bitmap bmp){
+        RemoteViews views = new RemoteViews(this.getPackageName(),R.layout.notification_flyer);
+        RemoteViews viewsExpanded = new RemoteViews(this.getPackageName(),R.layout.notification_flyer_expanded);
+        viewsExpanded.setImageViewBitmap(R.id.cover, bmp);
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.icon)
+                            .setContent(views)
+                            .setCustomBigContentView(viewsExpanded)
+                            .setOngoing(false);
 
 
-        RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification2);
-
-
-   //     System.out.println(flyer);
-
-        //    expanded.setImageViewResource(R.id.cover,R.drawable.gol);
-
-
-       //     expanded.setImageViewResource(R.id.play_pause, playButton);
-
-
-
-
-            Intent notificationIntent = new Intent(this, MainActivity.class);
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-
-            Notification notification = new Notification();
-            notification.contentView = views;
-            notification.icon = R.drawable.icon;
-         //   notification.flags |= Notification.FLAG_AUTO_CANCEL;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                // expanded view is available since 4.1
-                notification.bigContentView = expanded;
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(this, MainActivity.class);
+            resultIntent.putExtra("radio", true);
+            // The stack builder object will contain an artificial back stack for the
+            // started Activity.
+            // This ensures that navigating backward from the Activity leads out of
+            // your application to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            // Adds the back stack for the Intent (but not the Intent itself)
+            stackBuilder.addParentStack(MainActivity.class);
+            // Adds the Intent that starts the Activity to the top of the stack
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    // mId allows you to update the notification later on.
+            mNotificationManager.notify(2, mBuilder.build());
+    }
+    private void hilo(){
+        Thread checkEnVivo = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                    while(true){
+                        try {
+                            task();
+                            Thread.sleep(360000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                notification.visibility = Notification.VISIBILITY_PUBLIC;
-            }
-            return notification;
-
+        });checkEnVivo.start();
     }
 }

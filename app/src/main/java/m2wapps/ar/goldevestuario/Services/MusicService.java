@@ -15,7 +15,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.RemoteViews;
 
-import m2wapps.ar.goldevestuario.Activities.MainActivity;
+
 import m2wapps.ar.goldevestuario.Fragments.RadioFragment;
 import m2wapps.ar.goldevestuario.R;
 import m2wapps.ar.goldevestuario.ThemeHelper;

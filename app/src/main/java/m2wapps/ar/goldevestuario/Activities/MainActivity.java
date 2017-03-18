@@ -73,9 +73,17 @@ public class MainActivity extends AppCompatActivity
         if (isInternet) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-         //   flyer = new Intent(this, FlyerService.class);
-          //  startService(flyer);
-            setFragment(1);
+            flyer = new Intent(this, FlyerService.class);
+            startService(flyer);
+
+            Intent intent = getIntent();
+            boolean isRadio = intent.getBooleanExtra("radio",false);
+            if(!isRadio) {
+                setFragment(1);
+            }else{
+                setFragment(0);
+            }
+
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle(getResources().getString(R.string.app_name));
