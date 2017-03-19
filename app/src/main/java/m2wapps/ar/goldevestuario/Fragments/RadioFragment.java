@@ -47,8 +47,6 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
 
     private Button buttonStopPlay;
 
-    private Context ctx;
-
     private MediaPlayer player;
 
     private MusicService musicService;
@@ -88,7 +86,6 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     public RadioFragment() {
         // Required empty public constructor
-        this.ctx = getContext();
     }
     /**
      * Use this factory method to create a new instance of
@@ -121,7 +118,7 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
         intentFilter.addAction("playpause");
         intentFilter.addAction("close");
         // register the receiver
-        ctx.registerReceiver(broadcastReceiver, intentFilter);
+        getActivity().registerReceiver(broadcastReceiver, intentFilter);
 
         musicService = new MusicService();
 
@@ -213,13 +210,13 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
                 }
             });
             if(playIntent != null) {
-                ctx.stopService(playIntent);
+                getActivity().stopService(playIntent);
             }
             playIntent = null;
-            playIntent = new Intent(ctx, MusicService.class);
+            playIntent = new Intent(getActivity(), MusicService.class);
             playIntent.putExtra("ispng", false);
-            ctx.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            ctx.startService(playIntent);
+            getActivity().bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+            getActivity().startService(playIntent);
         }
     }
 
@@ -233,16 +230,16 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
         buttonPlay.setEnabled(true);
         buttonStopPlay.setEnabled(false);
         if (musicConnection != null) {
-                ctx.unbindService(musicConnection);
+            getActivity().unbindService(musicConnection);
         }
         if(playIntent != null) {
-            ctx.stopService(playIntent);
+            getActivity().stopService(playIntent);
         }
         playIntent = null;
-        playIntent = new Intent(ctx, MusicService.class);
+        playIntent = new Intent(getActivity(), MusicService.class);
         playIntent.putExtra("ispng", true);
-        ctx.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-        ctx.startService(playIntent);
+        getActivity().bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        getActivity().startService(playIntent);
     //    playSeekBar.setVisibility(View.INVISIBLE);
     }
     private void initializeMediaPlayer() {
@@ -272,15 +269,15 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
             player.stop();
         }
         if(playIntent != null) {
-            ctx.stopService(playIntent);
+            getActivity().stopService(playIntent);
         }
         if (musicConnection != null) {
             if(!buttonPlay.isEnabled()) {
-                ctx.unbindService(musicConnection);
+                getActivity().unbindService(musicConnection);
             }
         }
         if(broadcastReceiver != null){
-            ctx.unregisterReceiver(broadcastReceiver);
+            getActivity().unregisterReceiver(broadcastReceiver);
         }
     }
 

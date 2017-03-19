@@ -25,6 +25,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import m2wapps.ar.goldevestuario.Services.FlyerService;
@@ -77,6 +79,9 @@ public class MainActivity extends AppCompatActivity
             StrictMode.setThreadPolicy(policy);
             // Obtain the shared Tracker instance.
             // Obtain the FirebaseAnalytics instance.
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Inicio");
@@ -186,7 +191,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
-            String shareBody = "http://www.goldevestuario.com/";
+            String shareBody = "Escuchanos en vivo y lee todas las noticias del deporte en tu smartphone/tablet! - https://goo.gl/C8Hh70";
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Gol De Vestuario");
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "Compartir via"));
