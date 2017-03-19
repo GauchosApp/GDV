@@ -88,6 +88,8 @@
     <string name="inicio">Noticias</string>
     <string name="social">Social</string>
     <string name="share">Compartir</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940889479242441/3690247013</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

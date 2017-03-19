@@ -24,7 +24,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.Objects;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import m2wapps.ar.goldevestuario.Services.FlyerService;
 import m2wapps.ar.goldevestuario.Fragments.HomeFragment;
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity
 
     private RadioFragment radioFragment;
     private HomeFragment homeFragment;
-    private Intent flyer;
+    public static Intent flyer;
     private boolean isInternet;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,14 @@ public class MainActivity extends AppCompatActivity
         if (isInternet) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
+            // Obtain the shared Tracker instance.
+            // Obtain the FirebaseAnalytics instance.
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Inicio");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Home");
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Comienzo");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             flyer = new Intent(this, FlyerService.class);
             startService(flyer);
 
@@ -98,7 +108,7 @@ public class MainActivity extends AppCompatActivity
                     fragmentManager = getSupportFragmentManager();
                     fragmentTransaction = fragmentManager.beginTransaction();
                     if (radioFragment == null) {
-                        radioFragment = new RadioFragment(getPackageName(), MainActivity.this);
+                        radioFragment = new RadioFragment();
                     }
                     fragmentTransaction.replace(R.id.fragment, radioFragment);
                     fragmentTransaction.commit();
@@ -207,8 +217,13 @@ public class MainActivity extends AppCompatActivity
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 if (radioFragment == null) {
-                    radioFragment = new RadioFragment(getPackageName(), this);
+                    radioFragment = new RadioFragment();
                 }
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Fragment");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Radio");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Comienzo");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 fragmentTransaction.replace(R.id.fragment, radioFragment);
                 fragmentTransaction.commit();
                 break;
@@ -218,6 +233,11 @@ public class MainActivity extends AppCompatActivity
                 if (homeFragment == null) {
                     homeFragment = new HomeFragment();
                 }
+                Bundle bundle2 = new Bundle();
+                bundle2.putString(FirebaseAnalytics.Param.ITEM_ID, "Fragment");
+                bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME, "Noticias");
+                bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Comienzo");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2);
                 fragmentTransaction.replace(R.id.fragment, homeFragment);
                 fragmentTransaction.commit();
                 break;
@@ -229,4 +249,5 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 }

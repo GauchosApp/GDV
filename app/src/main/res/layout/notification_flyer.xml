@@ -51,7 +51,8 @@ THE SOFTWARE.
 			android:text="@string/envivo"
 			android:textAlignment="center"
 			android:textColor="@color/common_google_signin_btn_text_dark"
-			android:textSize="@dimen/cast_tracks_chooser_dialog_no_message_text_size" />
+			android:textSize="20sp"
+ />
 	</LinearLayout>
 
 </LinearLayout>

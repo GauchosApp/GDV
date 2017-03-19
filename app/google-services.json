@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "127817609765",
+    "project_id": "gol-de-vestuario"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127817609765:android:bb9bc840935b295c",
+        "android_client_info": {
+          "package_name": "m2wapps.ar.goldevestuario"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJc4aCLqhkFu058go98g7orPJwNQppkZ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-70298705-5"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

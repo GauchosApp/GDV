@@ -17,12 +17,14 @@ import android.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
 import java.util.List;
 
 import m2wapps.ar.goldevestuario.R;
+import m2wapps.ar.goldevestuario.Services.FlyerService;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -169,6 +171,7 @@ public class SettingsActivity extends PreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -200,17 +203,31 @@ public class SettingsActivity extends PreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class NotificationPreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_notification);
             setHasOptionsMenu(true);
-
+           findPreference("notifications_new_message").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+               @Override
+               public boolean onPreferenceChange(Preference preference, Object newValue) {
+                 boolean isOn = (boolean) newValue;
+                   if(!isOn){
+                       System.out.println("stop");
+                       getActivity().stopService(MainActivity.flyer);
+                   }else{
+                       System.out.println("start");
+                       getActivity().startService(MainActivity.flyer);
+                   }
+                   return true;
+               }
+           });
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+//            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
         }
 
         @Override

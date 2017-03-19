@@ -86,10 +86,9 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    public RadioFragment(){}
-    public RadioFragment(String packageName, Context ctx) {
+    public RadioFragment() {
         // Required empty public constructor
-        this.ctx = ctx;
+        this.ctx = getContext();
     }
     /**
      * Use this factory method to create a new instance of

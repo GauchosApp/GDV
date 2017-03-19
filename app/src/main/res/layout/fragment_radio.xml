@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -39,8 +40,8 @@
         <Button
             android:id="@+id/buttonStopPlay"
             android:layout_width="100dp"
+            android:layout_height="90dp"
             android:drawable="@drawable/abc2"
-            android:textColor="@color/wallet_bright_foreground_holo_light"
-            android:layout_height="90dp" />
+            android:textColor="?attr/colorButtonNormal" />
     </LinearLayout>
 </FrameLayout>
