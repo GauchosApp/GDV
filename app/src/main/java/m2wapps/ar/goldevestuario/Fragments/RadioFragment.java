@@ -259,8 +259,10 @@ public class RadioFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-
-
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     @Override
     public void onDestroy() {

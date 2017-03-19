@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Radio");
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Comienzo");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                fragmentTransaction.replace(R.id.fragment, radioFragment);
+                fragmentTransaction.add(R.id.fragment, radioFragment);
                 fragmentTransaction.commit();
                 break;
             case 1:
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity
                 bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME, "Noticias");
                 bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Comienzo");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle2);
-                fragmentTransaction.replace(R.id.fragment, homeFragment);
+                fragmentTransaction.add(R.id.fragment, homeFragment);
                 fragmentTransaction.commit();
                 break;
         }
